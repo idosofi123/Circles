@@ -3,23 +3,17 @@
 
 int main() {
 
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    int n;
+    std::string svgPath;
 
-    while (window.isOpen()) {
+    std::cout << "Number of complementing circles (n >= 1):" << std::endl;
+    std::cin >> n;
+    std::cout << "Path of the SVG file:" << std::endl;
+    std::cin >> svgPath;
 
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+    std::map<float, int> map{ {1.0f, 1}, {3.0f, 2}, {6.0f, 2} };
 
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
+    std::map<float, int>::iterator low = map.upper_bound(5.0f);
 
     return 0;
 }
