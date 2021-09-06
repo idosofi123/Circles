@@ -6,6 +6,6 @@ float HorizontalLine::GetLength() {
     return this->length;
 }
 
-Point HorizontalLine::Interpolate(float completionRate) {
-    return Point{ this->startingPoint.x + length * completionRate, this->startingPoint.y };
+Point HorizontalLine::Interpolate(float t) {
+    return startingPoint + Point{ length, 0 } * t;
 }

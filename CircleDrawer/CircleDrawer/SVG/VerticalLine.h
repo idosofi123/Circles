@@ -9,5 +9,5 @@ class VerticalLine : public Segment {
 	public:
 		VerticalLine(Point startingPoint, float length);
 		float GetLength() override;
-		Point Interpolate(float completionRate) override;
+		Point Interpolate(float t) override;
 };

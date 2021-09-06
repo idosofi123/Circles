@@ -7,6 +7,6 @@ float Line::GetLength() {
     return sqrt(pow(startingPoint.x - endingPoint.x, 2) + pow(startingPoint.y - endingPoint.y, 2));
 }
 
-Point Line::Interpolate(float completionRate) {
-    return Point{ startingPoint.x + endingPoint.x * completionRate, startingPoint.y + endingPoint.y * completionRate };
+Point Line::Interpolate(float t) {
+    return startingPoint * (1 - t) + endingPoint * t;
 }

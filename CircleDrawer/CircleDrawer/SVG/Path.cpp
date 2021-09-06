@@ -32,7 +32,7 @@ Path::Path(std::string path) {
 
 	// Handle the 'M' command seperately, to enable uniform handling of the segment-generating commands.
 	pathStream.ignore();
-	Point startingPoint = CutPoint(pathStream), currentPoint = startingPoint;
+	Point startingPoint = CutPoint(pathStream), currentPoint = startingPoint, controlPointA, controlPointB, endingPoint;
 
 	char command;
 	std::unique_ptr<Segment> segment;
@@ -58,12 +58,17 @@ Path::Path(std::string path) {
 
 			case SegmentType::QuadBezier:
 
-				segment = std::make_unique<QuadBezier>(currentPoint, CutPoint(pathStream), CutPoint(pathStream));
+				controlPointA = CutPoint(pathStream);
+				endingPoint = CutPoint(pathStream);
+				segment = std::make_unique<QuadBezier>(currentPoint, controlPointA, endingPoint);
 				break;
 
 			case SegmentType::CubicBezier:
 
-				segment = std::make_unique<CubicBezier>(currentPoint, CutPoint(pathStream), CutPoint(pathStream), CutPoint(pathStream));
+				controlPointA = CutPoint(pathStream);
+				controlPointB = CutPoint(pathStream);
+				endingPoint = CutPoint(pathStream);
+				segment = std::make_unique<CubicBezier>(currentPoint, controlPointA, controlPointB, endingPoint);
 				break;
 
 			case SegmentType::ConnectToStart:
@@ -73,7 +78,9 @@ Path::Path(std::string path) {
 		}
 
 		currentPoint = segment->Interpolate(1);
-		segments[segment->GetLength()] = std::move(segment);
+		totalLength += segment->GetLength();
+
+		segments[totalLength] = std::move(segment);
 	}
 }
 
@@ -83,7 +90,7 @@ Point Path::Interpolate(float t) {
 	std::map<float, std::unique_ptr<Segment>>::iterator relevantSegmnet = segments.lower_bound(t * totalLength);
 
 	// Given the specific segement calculate the relative interpolation rate to it.
-	float floorLength = relevantSegmnet == segments.begin() ? 0 : (--relevantSegmnet)->first;
+	float floorLength = relevantSegmnet == segments.begin() ? 0 : std::prev(relevantSegmnet)->first;
 	float relativeT = (totalLength * t - floorLength) / (relevantSegmnet->first - floorLength);
 
 	return relevantSegmnet->second->Interpolate(relativeT);

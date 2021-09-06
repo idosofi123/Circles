@@ -4,13 +4,9 @@ struct Point {
 	float x;
 	float y;
 
-	Point operator +(Point other) {
-		return Point{ x + other.x, y + other.y };
-	}
+	Point operator +(Point other);
 
-	Point operator *(float t) {
-		return Point{ x + x * t, y + y * t };
-	}
+	Point operator *(float t);
 };
 
 enum class SegmentType : char {

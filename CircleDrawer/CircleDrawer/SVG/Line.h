@@ -9,6 +9,6 @@ class Line : public Segment {
 	public:
 		Line(Point startingPoint, Point endingPoint);
 		float GetLength() override;
-		Point Interpolate(float completionRate) override;
+		Point Interpolate(float t) override;
 };
 

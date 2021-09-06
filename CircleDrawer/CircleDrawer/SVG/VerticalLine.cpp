@@ -6,6 +6,6 @@ float VerticalLine::GetLength() {
     return this->length;
 }
 
-Point VerticalLine::Interpolate(float completionRate) {
-    return Point{ this->startingPoint.x, this->startingPoint.y + length * completionRate };
+Point VerticalLine::Interpolate(float t) {
+    return startingPoint + Point{ 0, length } * t;
 }
