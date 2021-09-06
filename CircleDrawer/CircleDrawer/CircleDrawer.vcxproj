@@ -145,13 +145,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SVG\Bezier.cpp" />
+    <ClCompile Include="SVG\CubicBezier.cpp" />
+    <ClCompile Include="SVG\QuadBezier.cpp" />
+    <ClCompile Include="SVG\Line.cpp" />
+    <ClCompile Include="SVG\HorizontalLine.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SVG\Segment.cpp" />
     <ClCompile Include="SVG\Path.cpp" />
+    <ClCompile Include="SVG\VerticalLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SVG\Bezier.h" />
+    <ClInclude Include="SVG\CubicBezier.h" />
+    <ClInclude Include="SVG\QuadBezier.h" />
+    <ClInclude Include="SVG\Line.h" />
+    <ClInclude Include="SVG\HorizontalLine.h" />
     <ClInclude Include="SVG\Segment.h" />
     <ClInclude Include="SVG\Path.h" />
+    <ClInclude Include="SVG\VerticalLine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
