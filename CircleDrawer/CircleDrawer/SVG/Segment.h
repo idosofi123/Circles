@@ -1,12 +1,17 @@
 #pragma once
+#include <cmath>
+
+const float PI = atan(1) * 4;
 
 struct Point {
-	float x;
-	float y;
+
+	float x{ 0 };
+	float y{ 0 };
 
 	Point operator +(Point other);
-
+	Point& operator +=(Point other);
 	Point operator *(float t);
+	Point AddAngle(float angle);
 };
 
 enum class SegmentType : char {
