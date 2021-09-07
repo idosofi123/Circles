@@ -10,6 +10,7 @@
 
 inline Point Path::CutPoint(std::stringstream &path) {
 	float a, b;
+	if (path.peek() == ',') path.ignore();
 	path >> a;
 	path.ignore();
 	path >> b;

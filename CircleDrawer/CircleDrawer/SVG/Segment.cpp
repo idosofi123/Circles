@@ -5,6 +5,10 @@ Point Point::operator +(Point other) {
 	return Point{ x + other.x, y + other.y };
 }
 
+Point Point::operator -(Point other) {
+	return Point{ x - other.x, y - other.y };
+}
+
 Point Point::operator *(float t) {
 	return Point{ x * t, y * t };
 }
@@ -20,7 +24,7 @@ Point Point::AddAngle(float angle) {
 
 	float radius = sqrt(pow(x, 2) + pow(y, 2));
 
-	return Point{ radius * cos(computedAngle + angle), radius * sin(computedAngle + angle) };
+	return Point{ radius * cos(computedAngle - angle), radius * sin(computedAngle - angle) };
 }
 
 Point &Point::operator+=(Point other) {

@@ -9,6 +9,7 @@ struct Point {
 	float y{ 0 };
 
 	Point operator +(Point other);
+	Point operator -(Point other);
 	Point& operator +=(Point other);
 	Point operator *(float t);
 	Point AddAngle(float angle);
