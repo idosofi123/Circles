@@ -28,14 +28,14 @@ int main() {
 
     const unsigned int FPS = 60;
     const float DT = 1 / static_cast<float>(FPS);
-    const float ANIMATION_SECONDS = 7.0f;
+    const float ANIMATION_SECONDS = 15.0f;
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 10;
 
     sf::RenderWindow window(sf::VideoMode(WIN_SIZE, WIN_SIZE), "Circle Drawer", sf::Style::Default, settings);
 
-    sf::View view(sf::FloatRect(-100, -100 + WIN_SIZE, WIN_SIZE, -WIN_SIZE));
+    sf::View view(sf::FloatRect(-100, -100, WIN_SIZE, WIN_SIZE));
     window.setView(view);
 
     sf::Event event;
@@ -123,7 +123,7 @@ int main() {
 
             if (firstTravel) {
                 drawing.append(sf::Vertex(sf::Vector2f(anchorPoint.x, anchorPoint.y), sf::Color::Yellow));
-                pathDrawing.append(sf::Vertex(sf::Vector2f(path->Interpolate(t).x, path->Interpolate(t).y), sf::Color::Red));
+                //pathDrawing.append(sf::Vertex(sf::Vector2f(path->Interpolate(t).x, path->Interpolate(t).y), sf::Color::Red));
             }
 
             window.draw(pathDrawing);
