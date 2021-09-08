@@ -35,7 +35,7 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(WIN_SIZE, WIN_SIZE), "Circle Drawer", sf::Style::Default, settings);
 
-    sf::View view(sf::FloatRect(-100, WIN_SIZE - 100, WIN_SIZE, -WIN_SIZE));
+    sf::View view(sf::FloatRect(-100, -100, WIN_SIZE, WIN_SIZE));
     window.setView(view);
 
     sf::Event event;
@@ -52,6 +52,19 @@ int main() {
 
     sf::VertexArray drawing;
     drawing.setPrimitiveType(sf::PrimitiveType::LinesStrip);
+
+    // Prepare circle textures
+    std::vector<sf::CircleShape> circleTextures(2 * n + 1);
+    for (int i = 0; i < circleTextures.size(); i++) {
+        Point circlePoint = simulation.GetVector(0, i - n);
+
+        circleTextures[i].setRadius(sqrt(pow(circlePoint.x, 2) + pow(circlePoint.y, 2)));
+        circleTextures[i].setOrigin(circleTextures[i].getRadius(), circleTextures[i].getRadius());
+        circleTextures[i].setOutlineColor(sf::Color(114, 181, 185, 255));
+        circleTextures[i].setPointCount(500);
+        circleTextures[i].setOutlineThickness(1.5f);
+        circleTextures[i].setFillColor(sf::Color::Transparent);
+    }
 
     bool firstTravel = true;
     float t = 0;
@@ -87,31 +100,26 @@ int main() {
                 sf::Vertex(sf::Vector2f(anchorPoint.x, anchorPoint.y))
             };
 
-            sf::CircleShape circle;
-            circle.setOutlineColor(sf::Color(114, 181, 185, 255));
-            circle.setPointCount(500);
-            circle.setOutlineThickness(1.5f);
-            circle.setFillColor(sf::Color::Transparent);
-
             for (int i = 0, circleIndex; i <= 2 * n; i++) {
 
                 circleIndex = (i % 2) ? (i + 1) / 2 : -i / 2;
+                sf::CircleShape &currCircle = circleTextures[circleIndex + n];
 
                 newPoint = simulation.GetVector(t, circleIndex);
                 anchorPoint += newPoint;
                 line[0] = line[1];
-                line[1] = sf::Vertex(sf::Vector2f(anchorPoint.x, anchorPoint.y));
+                line[1].position.x = anchorPoint.x;
+                line[1].position.y = anchorPoint.y;
 
                 window.draw(line, 2, sf::Lines);
 
-                circle.setRadius(sqrt(pow(newPoint.x, 2) + pow(newPoint.y, 2)));
-                circle.setOrigin(circle.getRadius(), circle.getRadius());
-                circle.setPosition(anchorPoint.x, anchorPoint.y);
-                window.draw(circle);
+                currCircle.setPosition(anchorPoint.x, anchorPoint.y);
+                window.draw(currCircle);
             }
 
             if (firstTravel) {
                 drawing.append(sf::Vertex(sf::Vector2f(anchorPoint.x, anchorPoint.y), sf::Color::Yellow));
+                //drawing.append(sf::Vertex(sf::Vector2f(path->Interpolate(t).x, path->Interpolate(t).y), sf::Color::Red));
             }
 
             window.draw(drawing);
