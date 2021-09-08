@@ -10,7 +10,7 @@ class Path {
 		std::map<float, std::unique_ptr<Segment>> segments;
 		float totalLength;
 		
-		inline static Point CutPoint(std::stringstream &path);
+		inline static Point CutPoint(std::stringstream &path, const Point &currentPoint, bool isRelative);
 		inline static float CutLength(std::stringstream &path);
 
 	public:

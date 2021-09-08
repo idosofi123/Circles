@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-const float AVG_CALCULATION_DELTA = 0.0001f;
+const float AVG_CALCULATION_DELTA = 0.001f;
 
 class Simulation {
 

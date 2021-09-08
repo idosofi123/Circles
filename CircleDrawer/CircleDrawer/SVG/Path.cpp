@@ -8,13 +8,23 @@
 #include <algorithm>
 #include <sstream>
 
-inline Point Path::CutPoint(std::stringstream &path) {
+inline Point Path::CutPoint(std::stringstream &path, const Point &currentPoint = { 0, 0 }, bool isRelative = false) {
+
 	float a, b;
+
 	if (path.peek() == ',') path.ignore();
+
 	path >> a;
 	path.ignore();
 	path >> b;
-	return Point{ a, b };
+
+	Point res{ a, b };
+
+	if (isRelative) {
+		res += currentPoint;
+	}
+
+	return res;
 }
 
 inline float Path::CutLength(std::stringstream &path) {
@@ -25,9 +35,9 @@ inline float Path::CutLength(std::stringstream &path) {
 
 Path::Path(std::string path) {
 
-	totalLength = 0;
+	const float LENGTH_LOWER_LIMIT = 0.01f;
 
-	std::transform(path.begin(), path.end(), path.begin(), std::toupper);
+	totalLength = 0;
 
 	std::stringstream pathStream{ path };
 
@@ -36,11 +46,14 @@ Path::Path(std::string path) {
 	Point startingPoint = CutPoint(pathStream), currentPoint = startingPoint, controlPointA, controlPointB, endingPoint;
 
 	char command;
+	bool isRelative;
 	std::unique_ptr<Segment> segment;
 
 	while (pathStream >> command) {
 
-		switch (static_cast<SegmentType>(command)) {
+		isRelative = islower(command);
+
+		switch (static_cast<SegmentType>(toupper(command))) {
 
 			case SegmentType::HorizontalLine:
 
@@ -54,21 +67,21 @@ Path::Path(std::string path) {
 
 			case SegmentType::Line:
 
-				segment = std::make_unique<Line>(currentPoint, CutPoint(pathStream));
+				segment = std::make_unique<Line>(currentPoint, CutPoint(pathStream, currentPoint, isRelative));
 				break;
 
 			case SegmentType::QuadBezier:
 
-				controlPointA = CutPoint(pathStream);
-				endingPoint = CutPoint(pathStream);
+				controlPointA = CutPoint(pathStream, currentPoint, isRelative);
+				endingPoint = CutPoint(pathStream, currentPoint, isRelative);
 				segment = std::make_unique<QuadBezier>(currentPoint, controlPointA, endingPoint);
 				break;
 
 			case SegmentType::CubicBezier:
 
-				controlPointA = CutPoint(pathStream);
-				controlPointB = CutPoint(pathStream);
-				endingPoint = CutPoint(pathStream);
+				controlPointA = CutPoint(pathStream, currentPoint, isRelative);
+				controlPointB = CutPoint(pathStream, currentPoint, isRelative);
+				endingPoint = CutPoint(pathStream, currentPoint, isRelative);
 				segment = std::make_unique<CubicBezier>(currentPoint, controlPointA, controlPointB, endingPoint);
 				break;
 
@@ -78,10 +91,15 @@ Path::Path(std::string path) {
 				break;
 		}
 
-		currentPoint = segment->Interpolate(1);
-		totalLength += segment->GetLength();
+		float segmentLength = segment->GetLength();
 
-		segments[totalLength] = std::move(segment);
+		if (segmentLength >= LENGTH_LOWER_LIMIT) {
+
+			currentPoint = segment->Interpolate(1);
+			totalLength += segmentLength;
+			segments[totalLength] = std::move(segment);
+		}
+
 	}
 }
 
