@@ -35,7 +35,7 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(WIN_SIZE, WIN_SIZE), "Circle Drawer", sf::Style::Default, settings);
 
-    sf::View view(sf::FloatRect(-100, -100, WIN_SIZE, WIN_SIZE));
+    sf::View view(sf::FloatRect(-100, -100 + WIN_SIZE, WIN_SIZE, -WIN_SIZE));
     window.setView(view);
 
     sf::Event event;
@@ -53,6 +53,9 @@ int main() {
     sf::VertexArray drawing;
     drawing.setPrimitiveType(sf::PrimitiveType::LinesStrip);
 
+    sf::VertexArray pathDrawing;
+    pathDrawing.setPrimitiveType(sf::PrimitiveType::LinesStrip);
+
     // Prepare circle textures
     std::vector<sf::CircleShape> circleTextures(2 * n + 1);
     for (int i = 0; i < circleTextures.size(); i++) {
@@ -62,7 +65,7 @@ int main() {
         circleTextures[i].setOrigin(circleTextures[i].getRadius(), circleTextures[i].getRadius());
         circleTextures[i].setOutlineColor(sf::Color(114, 181, 185, 255));
         circleTextures[i].setPointCount(500);
-        circleTextures[i].setOutlineThickness(1.5f);
+        circleTextures[i].setOutlineThickness(1.0f);
         circleTextures[i].setFillColor(sf::Color::Transparent);
     }
 
@@ -103,6 +106,7 @@ int main() {
             for (int i = 0, circleIndex; i <= 2 * n; i++) {
 
                 circleIndex = (i % 2) ? (i + 1) / 2 : -i / 2;
+
                 sf::CircleShape &currCircle = circleTextures[circleIndex + n];
 
                 newPoint = simulation.GetVector(t, circleIndex);
@@ -119,9 +123,10 @@ int main() {
 
             if (firstTravel) {
                 drawing.append(sf::Vertex(sf::Vector2f(anchorPoint.x, anchorPoint.y), sf::Color::Yellow));
-                //drawing.append(sf::Vertex(sf::Vector2f(path->Interpolate(t).x, path->Interpolate(t).y), sf::Color::Red));
+                pathDrawing.append(sf::Vertex(sf::Vector2f(path->Interpolate(t).x, path->Interpolate(t).y), sf::Color::Red));
             }
 
+            window.draw(pathDrawing);
             window.draw(drawing);
 
             window.display();

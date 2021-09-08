@@ -11,16 +11,17 @@ Point Simulation::GetVector(float t, int circleIndex) {
 
 void Simulation::CalculateConstants() {
 
-	for (int i = 0, circleIndex; i < 2 * n + 1; i++) {
+	for (int i = -n; i <= n; i++) {
 
-		circleIndex = i - n;
+		Point averagePoint{ 0, 0 }, curr;
 
-		Point averagePoint{0, 0};
-
-		for (float t = AVG_CALCULATION_DELTA; t <= 1; t += AVG_CALCULATION_DELTA) {
-			averagePoint += (path->Interpolate(t) * AVG_CALCULATION_DELTA).AddAngle(-circleIndex * 2 * PI * t);
+		for (float t = 0; t < 1; t += AVG_CALCULATION_DELTA) {
+			curr = path->Interpolate(t);
+			curr = curr.AddAngle(-i * 2 * PI * t);
+			curr = curr * AVG_CALCULATION_DELTA;
+			averagePoint += curr;
 		}
-
+		 
 		constants.push_back(averagePoint);
 	}
 }
